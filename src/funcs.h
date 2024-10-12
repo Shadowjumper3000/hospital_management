@@ -19,7 +19,6 @@ struct Patient {
 int addPatient();
 int deletePatient();
 int updatePatient();
-// int displayPatient();
 int displayPatients();
 
 #endif
