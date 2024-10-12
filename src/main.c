@@ -142,9 +142,6 @@ int updatePatient(struct Patient *patients, int count, char* name) {
             patients[i].treatment[strcspn(patients[i].treatment, "\n")] = 0;
 
             printf("Patient information updated successfully\n");
-
-            if (DEBUG) {printf("[DEBUG] [updatePatient] exiting\n");};
-            
             return 0;
         }
     }

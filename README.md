@@ -24,9 +24,8 @@ Run the program:
 ./hospital_management
 ```
 
-Interact with the menu:
+## Interact with the menu:
+- Choose options to add, delete, update, or display patients.
 
-Choose options to add, delete, update, or display patients.
-
-Debugging
-The program includes debug messages that can be enabled by setting the DEBUG macro to 1.
+## Debugging
+- The program includes debug messages that can be enabled by setting the DEBUG macro to 1.
