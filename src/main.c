@@ -138,6 +138,11 @@ int deletePatient(struct Patient **patients, int *count, int id) {
 
     if (found) {
         printf("Patient deleted successfully.\n");
+        *patients = realloc(*patients, (size_t)(*count) * sizeof(struct Patient));
+        if (*patients == NULL && *count > 0) {
+            printf("Memory reallocation failed!\n");
+            return 0;
+        }
     } else {
         printf("Patient not found.\n");
     }
