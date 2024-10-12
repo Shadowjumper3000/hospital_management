@@ -1,22 +1,9 @@
 #include "funcs.h"
 
-struct Patient {
-    int id;
-    char name[50];
-    int age;
-    char gender;
-    char diagnosis[100];
-    char treatment[100];
-    //struct Patient *next;
-};
-
-
 int main() {
-    if (DEBUG) {printf("[DEBUG] [main] initializing\n");};
-    int capacity = 0;
     int count = 0;
     if (DEBUG) {printf("[DEBUG] [main] initializing PatientList\n");};
-    struct Patient *patients = malloc((size_t)capacity * sizeof(struct Patient));
+    struct Patient *patients = malloc((size_t)count * sizeof(struct Patient));
     if (patients == NULL) {
         if (DEBUG) {printf("[DEBUG] [main] Memory Error initializing PatientList\n");};
         return 1;
@@ -27,8 +14,9 @@ int main() {
     int id;
 
     do {
-        if (DEBUG) {printf("[DEBUG] [main] initializing menu\n");};
-        
+        size_t memoryUsage = (size_t)count * sizeof(struct Patient);
+        if (DEBUG) {printf("[DEBUG] [main] memoryUsage -> %lu bytes\n", (unsigned long)memoryUsage);};
+
         printf("\nHospital Management System Menu:\n");
         printf("1. Add a new patient\n");
         printf("2. Delete a patient\n");
@@ -70,15 +58,11 @@ int main() {
         }
     } while (choice != 5);
 
-    if (DEBUG) {printf("[DEBUG] [main] exiting\n");};
-
     return 0;
 }
 
 
 int addPatient(struct Patient **patients, int *count) {
-    if (DEBUG) {printf("[DEBUG] [addPatient] initializing\n");};
-
     static int last_id = 0;
 
     *patients = (struct Patient *) realloc(*patients, (size_t)(*count + 1) * sizeof(struct Patient));
@@ -118,16 +102,11 @@ int addPatient(struct Patient **patients, int *count) {
     newPatient->treatment[strcspn(newPatient->treatment, "\n")] = 0;
 
     (*count)++;
-
-    if (DEBUG) {printf("[DEBUG] [addPatient] exiting\n");};
-
     return 0;
 }
 
 
 int deletePatient(struct Patient **patients, int *count, int id) {
-    if (DEBUG) {printf("[DEBUG] [deletePatient] initializing\n");};
-
     int found = 0;
     for (int i = 0; i < *count; i++) {
         if ((*patients)[i].id == id) {
@@ -147,19 +126,18 @@ int deletePatient(struct Patient **patients, int *count, int id) {
             if (DEBUG) {printf("[DEBUG] [deletePatient] Memory Error deleting Patient\n");};
             return 0;
         }
+        if (count == 0) {
+            printf("No more Patients in System\n");
+        }
     } else {
         if (DEBUG) {printf("[DEBUG] [deletePatient] Patient not found\n");};
     }
-
-    if (DEBUG) {printf("[DEBUG] [deletePatient] exiting\n");};
 
     return 0;
 }
 
 
 int updatePatient(struct Patient *patients, int count, int id) {
-    if (DEBUG) {printf("[DEBUG] [updatePatient] initializing\n");};
-
     for (int i = 0; i < count; i++) {
         if (patients[i].id == id) {
             printf("Updating patient %d\n", patients[i].id);
@@ -178,15 +156,13 @@ int updatePatient(struct Patient *patients, int count, int id) {
             return 0;
         }
     }
-    if (DEBUG) {printf("[DEBUG] [updatePatient] Patient not found\n");};
 
+    if (DEBUG) {printf("[DEBUG] [updatePatient] Patient not found\n");};
     return 1;
 }
 
 
 int displayPatients(struct Patient *patients, int count) {
-    if (DEBUG) {printf("[DEBUG] [displayPatients] initializing\n");};
-
     if (count == 0) {
         if (DEBUG) {printf("[DEBUG] [displayPatients] no Patients found\n");};
         return 0;
@@ -197,8 +173,6 @@ int displayPatients(struct Patient *patients, int count) {
         printf("ID: %d, Name: %s, Age: %d, Gender: %c, Diagnosis: %s, Treatment: %s\n",
                patients[i].id, patients[i].name, patients[i].age, patients[i].gender, patients[i].diagnosis, patients[i].treatment);
     }
-
-    if (DEBUG) {printf("[DEBUG] [displayPatient] exiting\n");};
 
     return 0;
 }

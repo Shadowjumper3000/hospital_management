@@ -7,20 +7,20 @@
 
 #define DEBUG 1
 
-struct Patient;
+struct Patient {
+    int id;
+    char name[50];
+    int age;
+    char gender;
+    char diagnosis[100];
+    char treatment[100];
+    //struct Patient *next;
+};
 
 int addPatient();
 int deletePatient();
 int updatePatient();
 // int displayPatient();
 int displayPatients();
-
-int clear_buffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) {
-        // Discard characters until newline or EOF
-    }
-    return 0;
-}
 
 #endif
