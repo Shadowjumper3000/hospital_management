@@ -68,7 +68,7 @@ int addPatient(struct Patient **patients, int *count) {
     if (DEBUG) {printf("[DEBUG] [addPatient] expanding PatientList\n");};
     if (*patients == NULL) {
         if (DEBUG) {printf("[DEBUG] [addPatient] Memory Error expanding PatientList\n");};
-        return 0;
+        return 1;
     }
 
     struct Patient *newPatient = &(*patients)[*count];
@@ -116,7 +116,7 @@ int deletePatient(struct Patient **patients, int *count, char* name) {
         *patients = realloc(*patients, (size_t)(*count) * sizeof(struct Patient));
         if (*patients == NULL && *count > 0) {
             if (DEBUG) {printf("[DEBUG] [deletePatient] Memory Error deleting Patient\n");};
-            return 0;
+            return 1;
         }
         if (count == 0) {
             printf("No more Patients in System\n");
@@ -154,7 +154,7 @@ int updatePatient(struct Patient *patients, int count, char* name) {
 int displayPatients(struct Patient *patients, int count) {
     if (count == 0) {
         if (DEBUG) {printf("[DEBUG] [displayPatients] no Patients found\n");};
-        return 0;
+        return 1;
     }
 
     printf("\nPatient Records:\n");
