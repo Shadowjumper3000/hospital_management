@@ -1,6 +1,7 @@
 #include "funcs.h"
 
 struct Patient {
+    int id;
     char name[50];
     int age;
     char gender;
@@ -11,12 +12,19 @@ struct Patient {
 
 
 int main() {
-    int capacity = 5;
+    int capacity = 0;
     int count = 0;
+    struct Patient *patients = malloc((size_t)capacity * sizeof(struct Patient));
+    if (patients == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
 
     
     int choice;
-    char name[50];
+    int id;
+
+    if (DEBUG) {printf("[DEBUG] [main] initializing menu\n");};
 
     do {
         printf("\nHospital Management System Menu:\n");
@@ -25,80 +33,100 @@ int main() {
         printf("3. Update patient information\n");
         printf("4. Display all patients\n");
         printf("5. Exit\n");
-        printf("Enter your choice: ");
+        printf("Enter your choice\n->");
         scanf("%d", &choice);
         getchar();
 
         switch (choice) {
             case 1:
+                if (DEBUG) {printf("[DEBUG] [main] calling addPatient()\n");};
                 addPatient(&patients, &count);
                 break;
             case 2:
-                printf("Enter patient name to delete: ");
-                fgets(name, sizeof(name), stdin);
-                name[strcspn(name, "\n")] = 0;
-                deletePatient(&patients, &count, name);
+                printf("Enter patient ID to delete\n->");
+                scanf("%d", &id);
+                getchar();
+                if (DEBUG) {printf("[DEBUG] [main] calling deletePatient()\n");};
+                deletePatient(&patients, &count, id);
                 break;
             case 3:
-                printf("Enter patient name to update: ");
-                fgets(name, sizeof(name), stdin);
-                name[strcspn(name, "\n")] = 0;
-                updatePatient(patients, count, name);
+                printf("Enter patient ID to update\n->");
+                scanf("%d", &id);
+                getchar(); // Consume the newline character left by scanf
+                if (DEBUG) {printf("[DEBUG] [main] calling updatePatient()\n");};
+                updatePatient(patients, count, id);
                 break;
             case 4:
+                if (DEBUG) {printf("[DEBUG] [main] calling displayPatients()\n");};
                 displayPatients(patients, count);
                 break;
             case 5:
-                freePatients(patients, count);
-                printf("Exiting...\n");
-                break;
+                free(patients);
+                return 0;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
     } while (choice != 5);
-
+    if (DEBUG) {printf("[DEBUG] [main] exiting\n");};
     return 0;
 }
 
 
 int addPatient(struct Patient **patients, int *count) {
+    if (DEBUG) {printf("[DEBUG] [addPatient] initializing\n");};
+
+    static int last_id = 0;
+
     if (*count % 5 == 0) {
-        *patients = realloc(*patients, (*count + 5) * sizeof(struct Patient));
+        *patients = (struct Patient *) realloc(*patients, (size_t)(*count + 5) * sizeof(struct Patient));
+        if (DEBUG) {printf("[DEBUG] [addPatient] expanding PatientList\n");};
         if (*patients == NULL) {
             printf("Memory reallocation failed!\n");
-            return;
+            return 0;
         }
     }
 
     struct Patient *newPatient = &(*patients)[*count];
-    printf("Enter patient name: ");
+
+    if (*count == 0) {
+        newPatient->id = 1;
+    } else {
+        newPatient->id = last_id + 1;
+    }
+    last_id = newPatient->id;
+    
+    printf("Enter patient name\n->");
     fgets(newPatient->name, sizeof(newPatient->name), stdin);
     newPatient->name[strcspn(newPatient->name, "\n")] = 0;
 
-    printf("Enter age: ");
+    printf("Enter age\n->");
     scanf("%d", &newPatient->age);
     getchar();
 
-    printf("Enter gender (M/F): ");
+    printf("Enter gender (M/F)\n->");
     scanf("%c", &newPatient->gender);
     getchar();
 
-    printf("Enter diagnosis: ");
+    printf("Enter diagnosis\n->");
     fgets(newPatient->diagnosis, sizeof(newPatient->diagnosis), stdin);
     newPatient->diagnosis[strcspn(newPatient->diagnosis, "\n")] = 0;
 
-    printf("Enter treatment: ");
+    printf("Enter treatment\n->");
     fgets(newPatient->treatment, sizeof(newPatient->treatment), stdin);
     newPatient->treatment[strcspn(newPatient->treatment, "\n")] = 0;
 
     (*count)++;
+
+    return 0;
 }
 
 
-int deletePatient(struct Patient **patients, int *count, char *name) {
+int deletePatient(struct Patient **patients, int *count, int id) {
+    if (DEBUG) {printf("[DEBUG] [deletePatient] initializing\n");};
+
     int found = 0;
     for (int i = 0; i < *count; i++) {
-        if (strcmp((*patients)[i].name, name) == 0) {
+        if ((*patients)[i].id == id) {
             found = 1;
             for (int j = i; j < *count - 1; j++) {
                 (*patients)[j] = (*patients)[j + 1];
@@ -113,43 +141,48 @@ int deletePatient(struct Patient **patients, int *count, char *name) {
     } else {
         printf("Patient not found.\n");
     }
+
+    return 0;
 }
 
 
-int updatePatient(struct Patient *patients, int count, char *name) {
+int updatePatient(struct Patient *patients, int count, int id) {
+    if (DEBUG) {printf("[DEBUG] [updatePatient] initializing\n");};
+
     for (int i = 0; i < count; i++) {
-        if (strcmp(patients[i].name, name) == 0) {
-            printf("Updating patient %s:\n", patients[i].name);
-            printf("Enter new diagnosis: ");
+        if (patients[i].id == id) {
+            printf("Updating patient %d:\n", patients[i].id);
+            printf("Enter new diagnosis\n->");
             fgets(patients[i].diagnosis, sizeof(patients[i].diagnosis), stdin);
             patients[i].diagnosis[strcspn(patients[i].diagnosis, "\n")] = 0;
 
-            printf("Enter new treatment: ");
+            printf("Enter new treatment\n->");
             fgets(patients[i].treatment, sizeof(patients[i].treatment), stdin);
             patients[i].treatment[strcspn(patients[i].treatment, "\n")] = 0;
 
             printf("Patient information updated successfully.\n");
-            return;
+            return 0;
         }
     }
     printf("Patient not found.\n");
+
+    return 1;
 }
 
 
 int displayPatients(struct Patient *patients, int count) {
+    if (DEBUG) {printf("[DEBUG] [displayPatients] initializing\n");};
+
     if (count == 0) {
         printf("No patients found.\n");
-        return;
+        return 0;
     }
 
     printf("\nPatient Records:\n");
     for (int i = 0; i < count; i++) {
-        printf("Name: %s, Age: %d, Gender: %c, Diagnosis: %s, Treatment: %s\n",
-               patients[i].name, patients[i].age, patients[i].gender, patients[i].diagnosis, patients[i].treatment);
+        printf("ID: %d, Name: %s, Age: %d, Gender: %c, Diagnosis: %s, Treatment: %s\n",
+               patients[i].id, patients[i].name, patients[i].age, patients[i].gender, patients[i].diagnosis, patients[i].treatment);
     }
-}
 
-
-int displayPatient() {
-
+    return 0;
 }

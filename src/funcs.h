@@ -5,12 +5,14 @@
 #include <stdio.h>
 #include <string.h>
 
-struct funcs;
+#define DEBUG 1
+
+struct Patient;
 
 int addPatient();
-int removePatient();
+int deletePatient();
 int updatePatient();
-int displayPatient();
+// int displayPatient();
 int displayPatients();
 
 int clear_buffer() {
