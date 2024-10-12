@@ -8,7 +8,6 @@
 #define DEBUG 1
 
 struct Patient {
-    int id;
     char name[50];
     int age;
     char gender;

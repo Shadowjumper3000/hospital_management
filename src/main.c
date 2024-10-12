@@ -11,7 +11,7 @@ int main() {
 
     
     int choice;
-    int id;
+    char name[50];
 
     do {
         size_t memoryUsage = (size_t)count * sizeof(struct Patient);
@@ -33,18 +33,18 @@ int main() {
                 addPatient(&patients, &count);
                 break;
             case 2:
-                printf("Enter patient ID to delete\n->");
-                scanf("%d", &id);
+                printf("Enter patient Name to delete\n->");
+                scanf("%s", name);
                 getchar();
                 if (DEBUG) {printf("[DEBUG] [main] calling deletePatient()\n");};
-                deletePatient(&patients, &count, id);
+                deletePatient(&patients, &count, name);
                 break;
             case 3:
-                printf("Enter patient ID to update\n->");
-                scanf("%d", &id);
+                printf("Enter patient Name to update\n->");
+                scanf("%s", name);
                 getchar();
                 if (DEBUG) {printf("[DEBUG] [main] calling updatePatient()\n");};
-                updatePatient(patients, count, id);
+                updatePatient(patients, count, name);
                 break;
             case 4:
                 if (DEBUG) {printf("[DEBUG] [main] calling displayPatients()\n");};
@@ -63,7 +63,6 @@ int main() {
 
 
 int addPatient(struct Patient **patients, int *count) {
-    static int last_id = 0;
 
     *patients = (struct Patient *) realloc(*patients, (size_t)(*count + 1) * sizeof(struct Patient));
     if (DEBUG) {printf("[DEBUG] [addPatient] expanding PatientList\n");};
@@ -74,13 +73,6 @@ int addPatient(struct Patient **patients, int *count) {
 
     struct Patient *newPatient = &(*patients)[*count];
 
-    if (*count == 0) {
-        newPatient->id = 1;
-    } else {
-        newPatient->id = last_id + 1;
-    }
-    last_id = newPatient->id;
-    
     printf("Enter patient name\n->");
     fgets(newPatient->name, sizeof(newPatient->name), stdin);
     newPatient->name[strcspn(newPatient->name, "\n")] = 0;
@@ -106,10 +98,10 @@ int addPatient(struct Patient **patients, int *count) {
 }
 
 
-int deletePatient(struct Patient **patients, int *count, int id) {
+int deletePatient(struct Patient **patients, int *count, char* name) {
     int found = 0;
     for (int i = 0; i < *count; i++) {
-        if ((*patients)[i].id == id) {
+        if (strcmp((*patients)[i].name, name) == 0) {
             found = 1;
             for (int j = i; j < *count - 1; j++) {
                 (*patients)[j] = (*patients)[j + 1];
@@ -137,10 +129,10 @@ int deletePatient(struct Patient **patients, int *count, int id) {
 }
 
 
-int updatePatient(struct Patient *patients, int count, int id) {
+int updatePatient(struct Patient *patients, int count, char* name) {
     for (int i = 0; i < count; i++) {
-        if (patients[i].id == id) {
-            printf("Updating patient %d\n", patients[i].id);
+        if (strcmp(patients[i].name, name) == 0) {
+            printf("Updating patient %s\n", patients[i].name);
             printf("Enter new diagnosis\n->");
             fgets(patients[i].diagnosis, sizeof(patients[i].diagnosis), stdin);
             patients[i].diagnosis[strcspn(patients[i].diagnosis, "\n")] = 0;
@@ -170,8 +162,8 @@ int displayPatients(struct Patient *patients, int count) {
 
     printf("\nPatient Records:\n");
     for (int i = 0; i < count; i++) {
-        printf("ID: %d, Name: %s, Age: %d, Gender: %c, Diagnosis: %s, Treatment: %s\n",
-               patients[i].id, patients[i].name, patients[i].age, patients[i].gender, patients[i].diagnosis, patients[i].treatment);
+        printf("Name: %s, Age: %d, Gender: %c, Diagnosis: %s, Treatment: %s\n",
+               patients[i].name, patients[i].age, patients[i].gender, patients[i].diagnosis, patients[i].treatment);
     }
 
     return 0;
