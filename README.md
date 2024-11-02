@@ -12,9 +12,20 @@ Dynamically store Patient Records
 - **Display all patients** Show a list of all patients currently in the system.
 
 ## Usage
+Create the following folder hierarchy:
+
+```
+hospital_management/
+├── src/
+│   ├── main.c
+│   ├── hospital.c
+│   └── hospital.h
+└── assets/
+    └── patient-data/
+    └── patient-list.txt
+```
 
 Compile the program:
-- Make sure that **main.c** and **funcs.h** are in the same Directory.
 ```sh
 gcc -o hospital_management main.c -I.
 ```
