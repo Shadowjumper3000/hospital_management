@@ -6,10 +6,11 @@ Dynamically store Patient Records
 
 ## Features
 
-- **Add a new patient** Add a new patient to the system.
-- **Delete a patient** Remove a patient from the system by their ID.
-- **Update patient information** Modify the details of an existing patient.
-- **Display all patients** Show a list of all patients currently in the system.
+- **Add a new patient**: Add a new patient to the system.
+- **Delete a patient**: Remove a patient from the system by their ID.
+- **Update patient information**: Modify the details of an existing patient.
+- **Display all patients**: Show a list of all patients currently in the system.
+- **Search for a patient**: Find a patient by their ID or name.
 
 ## Usage
 Create the following folder hierarchy:
@@ -27,7 +28,7 @@ hospital_management/
 
 Compile the program:
 ```sh
-gcc -o hospital_management main.c -I.
+gcc -o hospital_management src/main.c src/hospital.c -I.
 ```
 
 Run the program:
