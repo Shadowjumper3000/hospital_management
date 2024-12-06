@@ -1,4 +1,25 @@
-/.vscode
-src/build
-!patient-list.txt
+# IDE specific files
+/.cursor/
+
+# Build directories
+/out/
+/build/
+/src/build/
+
+# Generated files
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Archives
 *.zip
+*.tar
+*.gz
+*.rar
+
+# Patient list
+/assets/
+patient-list.txt
+/patient-data

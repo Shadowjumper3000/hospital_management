@@ -17,13 +17,16 @@ Create the following folder hierarchy:
 
 ```
 hospital_management/
-├── src/
-│   ├── main.c
-│   ├── hospital.c
-│   └── hospital.h
-└── assets/
-    └── patient-data/
-    └── patient-list.txt
+├── .gitignore
+├── README.md
+├── assets/
+│   ├── patient-list.txt
+│   └── patient-data/
+│       └── <patient-name>.txt
+└── src/
+    ├── hospital.c
+    ├── hospital.h
+    └── main.c
 ```
 
 Compile the program:
