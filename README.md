@@ -2,23 +2,34 @@
 
 ## Overview
 
-Dynamically store Patient Records
+A C program for managing hospital patient records with thread-safe operations and file persistence.
 
 ## Features
 
-- **Add a new patient**: Add a new patient to the system.
-- **Delete a patient**: Remove a patient from the system by their ID.
-- **Update patient information**: Modify the details of an existing patient.
-- **Display all patients**: Show a list of all patients currently in the system.
-- **Search for a patient**: Find a patient by their ID or name.
+- **Add a new patient**: Add a new patient with name, age, gender, diagnosis, and treatment.
+- **Delete a patient**: Remove a patient from the system.
+- **Update patient information**: Modify diagnosis and treatment details.
+- **Display all patients**: Show a list of all patients with their complete information.
+- **Search for patients**: 
+  - Search by name and gender (uses ID encoding)
+  - Search by patient ID
 
-## Usage
-Create the following folder hierarchy:
+## Technical Details
+
+- Thread-safe operations using mutex locks
+- File-based persistence for patient records
+- Unique ID generation using name hashing and gender encoding
+- Recursive search implementation
+- Dynamic memory management
+- Debug logging support
+
+## Project Structure
 
 ```
 hospital_management/
 ├── .gitignore
 ├── README.md
+├── CMakeLists.txt
 ├── assets/
 │   ├── patient-list.txt
 │   └── patient-data/
@@ -29,18 +40,51 @@ hospital_management/
     └── main.c
 ```
 
-Compile the program:
+## Building the Project
+
+### Using CMake (Recommended)
+
 ```sh
-gcc -o hospital_management src/main.c src/hospital.c -I.
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 
-Run the program:
+### Manual Compilation
+
 ```sh
-./hospital_management
+gcc -o hospital_management src/main.c src/hospital.c -I. -pthread
 ```
 
-## Interact with the menu:
-- Choose options to add, delete, update, or display patients.
+### Windows-specific
+Ensure you have MinGW or Visual Studio with C compiler installed.
 
-## Debugging
-- The program includes debug messages that can be enabled by setting the DEBUG macro to 1.
+## Running the Program
+
+```sh
+./hospital_management  # Linux/MacOS
+hospital_management.exe  # Windows
+```
+
+## Development
+
+### Prerequisites
+- C compiler (GCC/Clang/MSVC)
+- CMake 3.5.0 or higher
+- pthread support (included in Windows builds)
+
+### Debug Mode
+Set `DEBUG` macro to 1 in hospital.h to enable detailed logging:
+
+```c
+#define DEBUG 1
+```
+
+## Data Storage
+- Patient list maintained in `assets/patient-list.txt`
+- Individual patient records stored in `assets/patient-data/<patient-name>.txt`
+- Automatic directory creation on first run
+
+## Thread Safety
+All file operations and linked list modifications are protected by mutex locks for concurrent access safety.

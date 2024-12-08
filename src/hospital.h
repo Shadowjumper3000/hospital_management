@@ -6,6 +6,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <sys/stat.h>
+#include <errno.h>
+#include <ctype.h>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -28,32 +30,19 @@ typedef enum {
 } Gender;
 
 /// @brief Patient struct
-struct Patient
-{
-    char name[NAME_SIZE];
-    int age;
-    char gender;
-    char diagnosis[DIAGNOSIS_SIZE];
-    char treatment[TREATMENT_SIZE];
-    struct Patient *next;
-};
-
-/// @brief Data structure for patient check-in
-struct CheckInData
+typedef struct Patient
 {
     char name[NAME_SIZE];
     int age;
     Gender gender;
+    unsigned int patient_id;
     char diagnosis[DIAGNOSIS_SIZE];
     char treatment[TREATMENT_SIZE];
-    struct Patient **head;
-};
+    struct Patient *next;
+} Patient;
 
 // Function declarations
-struct Patient *searchPatientRecursive(struct Patient *current, const char *name);
-unsigned int encodePatientID(int age, char gender);
-void decodePatientID(unsigned int id, int *age, char *gender);
-void *checkInPatient(void *arg);
+unsigned int encodePatientID(const char* name, Gender gender);
 int loadPatient(const char *name, struct Patient *patient);
 int loadPatients(struct Patient **head);
 int savePatient(struct Patient *patient);
@@ -61,7 +50,8 @@ int addPatient(struct Patient **head);
 int deletePatient(struct Patient **head, const char *name);
 int updatePatient(struct Patient *head, const char *name);
 int displayPatients(struct Patient *head);
-int searchPatient(struct Patient *head, const char *name);
+Patient *searchPatient(struct Patient *head, const char *name, Gender gender);
 int ensureDirectoriesExist(void);
+Patient *searchPatientByID(struct Patient *head, unsigned int id);
 
 #endif

@@ -31,8 +31,9 @@ int main()
         printf("2. Delete a patient\n");
         printf("3. Update patient information\n");
         printf("4. Display all patients\n");
-        printf("5. Search for a patient\n");
-        printf("Enter your choice: "); // Improved prompt formatting
+        printf("5. Search by name and gender\n");
+        printf("6. Search by ID\n");
+        printf("Enter your choice: ");
 
         // Input validation for choice
         if (scanf("%d", &choice) != 1)
@@ -90,12 +91,59 @@ int main()
             }
             break;
         case 5:
-            printf("Enter patient name to search: "); // Improved prompt formatting
-            if (fgets(name, sizeof(name), stdin) != NULL)
-            {
+            printf("Enter patient name: ");
+            if (fgets(name, sizeof(name), stdin) != NULL) {
                 name[strcspn(name, "\n")] = 0;
-                if (searchPatient(patients, name) != 0)
-                {
+                char gender_input;
+                printf("Enter gender (M/F/O): ");
+                scanf(" %c", &gender_input);
+                getchar(); // Consume newline
+                
+                Gender gender;
+                switch(toupper(gender_input)) {
+                    case 'F': gender = FEMALE; break;
+                    case 'O': gender = OTHER; break;
+                    default: gender = MALE; break;
+                }
+                
+                struct Patient *found = searchPatient(patients, name, gender);
+                if (found) {
+                    printf("\nFound patient:\n");
+                    printf("ID: %u\n", found->patient_id);
+                    printf("Name: %s\n", found->name);
+                    printf("Age: %d\n", found->age);
+                    printf("Gender: %c\n", gender_input);
+                    printf("Diagnosis: %s\n", found->diagnosis);
+                    printf("Treatment: %s\n", found->treatment);
+                    printf("------------------------\n");
+                } else {
+                    printf("Patient not found.\n");
+                }
+            }
+            break;
+            
+        case 6:
+            printf("Enter patient ID: ");
+            unsigned int search_id;
+            if (scanf("%u", &search_id) == 1) {
+                getchar(); // Consume newline
+                struct Patient *found = searchPatientByID(patients, search_id);
+                if (found) {
+                    printf("\nFound patient:\n");
+                    printf("ID: %u\n", found->patient_id);
+                    printf("Name: %s\n", found->name);
+                    printf("Age: %d\n", found->age);
+                    char gender_display;
+                    switch(found->gender) {
+                        case FEMALE: gender_display = 'F'; break;
+                        case OTHER: gender_display = 'O'; break;
+                        default: gender_display = 'M'; break;
+                    }
+                    printf("Gender: %c\n", gender_display);
+                    printf("Diagnosis: %s\n", found->diagnosis);
+                    printf("Treatment: %s\n", found->treatment);
+                    printf("------------------------\n");
+                } else {
                     printf("Patient not found.\n");
                 }
             }
@@ -105,5 +153,5 @@ int main()
         }
     } while (1);
 
-    return 0; // Unreachable but good practice
+    return 0;
 }
